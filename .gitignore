@@ -53,3 +53,5 @@ CodeCoverage/
 TestResult.xml
 nunit-*.xml
 Tamagotchi API/.idea/.idea.Tamagotchi API/.idea/
+
+.DS_Store
