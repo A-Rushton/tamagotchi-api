@@ -8,10 +8,12 @@ namespace Tamagotchi.Domain.Entities;
 /// </summary>
 public class Pet : Entity
 {
-    public Pet()
+    public Pet(string? name = null)
     {
+        Name = name ?? "Unnamed Pet";
+        Age = 0;
+        Hunger = HungerLevel.Peckish;
         Happiness = HappinessLevel.Content;
-        Hunger = HungerLevel.Satisfied;
     }
     
     // --- AI Prompt Comments ---
@@ -45,40 +47,40 @@ public class Pet : Entity
     /// The date and time when the pet was last fed.
     /// Can only be set by this entity.
     /// </summary>
-    public DateTime LastFed { get; private set; }
+    public DateTimeOffset LastFed { get; private set; }
 
     /// <summary>
     /// The date and time when the pet was last played with.
     /// Can only be set by this entity.
     /// </summary>
-    public DateTime LastPlayedWith { get; private set; }
+    public DateTimeOffset LastPlayedWith { get; private set; }
 
     /// <summary>
     /// Feed the pet: increment Hunger by 1 (up to max), and update LastFed.
     /// Throws InvalidOperationException if already Full.
     /// </summary>
-    public void Feed()
+    public void Feed(DateTimeOffset feedTime)
     {
         if (Hunger == HungerLevel.Full)
             throw new InvalidOperationException("Pet is already full.");
         var maxHunger = Enum.GetValues(typeof(HungerLevel)).Cast<int>().Max();
         if ((int)Hunger < maxHunger)
             Hunger = (HungerLevel)((int)Hunger + 1);
-        LastFed = DateTime.UtcNow;
+        LastFed = feedTime;
     }
 
     /// <summary>
     /// Play with the pet: increment Happiness by 1 (up to max), and update LastPlayedWith.
     /// Throws InvalidOperationException if already Ecstatic.
     /// </summary>
-    public void Play()
+    public void Play(DateTimeOffset playTime)
     {
         if (Happiness == HappinessLevel.Ecstatic)
             throw new InvalidOperationException("Pet is already ecstatic.");
         var maxHappiness = Enum.GetValues(typeof(HappinessLevel)).Cast<int>().Max();
         if ((int)Happiness < maxHappiness)
             Happiness = (HappinessLevel)((int)Happiness + 1);
-        LastPlayedWith = DateTime.UtcNow;
+        LastPlayedWith = playTime;
     }
 
     /// <summary>
@@ -103,5 +105,13 @@ public class Pet : Entity
         var minHappiness = Enum.GetValues(typeof(HappinessLevel)).Cast<int>().Min();
         if ((int)Happiness > minHappiness)
             Happiness = (HappinessLevel)((int)Happiness - 1);
+    }
+    
+    public void Checkup(DateTimeOffset checkTime)
+    {
+        if (LastFed < checkTime.AddMinutes(-2))
+            Starve();
+        if (LastPlayedWith < checkTime.AddMinutes(-2))
+            Neglect();
     }
 }
