@@ -8,15 +8,15 @@ namespace Tamagotchi.Domain.Enums;
 /// </summary>
 public enum HappinessLevel
 {
-    [Display(Name = "Ecstatic")]
-    Ecstatic = 0,
-    [Display(Name = "Happy")]
-    Happy = 1,
+    [Display(Name = "Miserable")]
+    Miserable = 0,
+    [Display(Name = "Sad")]
+    Sad = 1,
     [Display(Name = "Content")]
     Content = 2,
-    [Display(Name = "Sad")]
-    Sad = 3,
-    [Display(Name = "Miserable")]
-    Miserable = 4
+    [Display(Name = "Happy")]
+    Happy = 3,
+    [Display(Name = "Ecstatic")]
+    Ecstatic = 4
 }
 

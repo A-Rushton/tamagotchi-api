@@ -8,15 +8,15 @@ namespace Tamagotchi.Domain.Enums;
 /// </summary>
 public enum HungerLevel
 {
-    [Display(Name = "Full")]
-    Full = 0,
-    [Display(Name = "Satisfied")]
-    Satisfied = 1,
+    [Display(Name = "Starving")]
+    Starving = 0,
+    [Display(Name = "Hungry")]
+    Hungry = 1,
     [Display(Name = "Peckish")]
     Peckish = 2,
-    [Display(Name = "Hungry")]
-    Hungry = 3,
-    [Display(Name = "Starving")]
-    Starving = 4
+    [Display(Name = "Satisfied")]
+    Satisfied = 3,
+    [Display(Name = "Full")]
+    Full = 4
 }
 

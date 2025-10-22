@@ -8,6 +8,12 @@ namespace Tamagotchi.Domain.Entities;
 /// </summary>
 public class Pet : Entity
 {
+    public Pet()
+    {
+        Happiness = HappinessLevel.Content;
+        Hunger = HungerLevel.Satisfied;
+    }
+    
     // --- AI Prompt Comments ---
     // This class models a Tamagotchi pet for the domain layer.
     // It inherits the unique Id, CreatedAt, and UpdatedAt from Entity.
@@ -49,9 +55,12 @@ public class Pet : Entity
 
     /// <summary>
     /// Feed the pet: increment Hunger by 1 (up to max), and update LastFed.
+    /// Throws InvalidOperationException if already Full.
     /// </summary>
     public void Feed()
     {
+        if (Hunger == HungerLevel.Full)
+            throw new InvalidOperationException("Pet is already full.");
         var maxHunger = Enum.GetValues(typeof(HungerLevel)).Cast<int>().Max();
         if ((int)Hunger < maxHunger)
             Hunger = (HungerLevel)((int)Hunger + 1);
@@ -60,12 +69,39 @@ public class Pet : Entity
 
     /// <summary>
     /// Play with the pet: increment Happiness by 1 (up to max), and update LastPlayedWith.
+    /// Throws InvalidOperationException if already Ecstatic.
     /// </summary>
     public void Play()
     {
+        if (Happiness == HappinessLevel.Ecstatic)
+            throw new InvalidOperationException("Pet is already ecstatic.");
         var maxHappiness = Enum.GetValues(typeof(HappinessLevel)).Cast<int>().Max();
         if ((int)Happiness < maxHappiness)
             Happiness = (HappinessLevel)((int)Happiness + 1);
         LastPlayedWith = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// Starve the pet: decrement Hunger by 1 (down to min). Throws InvalidOperationException if already Starving.
+    /// </summary>
+    public void Starve()
+    {
+        if (Hunger == HungerLevel.Starving)
+            throw new InvalidOperationException("Pet has died of starvation.");
+        var minHunger = Enum.GetValues(typeof(HungerLevel)).Cast<int>().Min();
+        if ((int)Hunger > minHunger)
+            Hunger = (HungerLevel)((int)Hunger - 1);
+    }
+
+    /// <summary>
+    /// Neglect the pet: decrement Happiness by 1 (down to min). Throws InvalidOperationException if already Miserable.
+    /// </summary>
+    public void Neglect()
+    {
+        if (Happiness == HappinessLevel.Miserable)
+            throw new InvalidOperationException("Pet has run away due to misery.");
+        var minHappiness = Enum.GetValues(typeof(HappinessLevel)).Cast<int>().Min();
+        if ((int)Happiness > minHappiness)
+            Happiness = (HappinessLevel)((int)Happiness - 1);
     }
 }
